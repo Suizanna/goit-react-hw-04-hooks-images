@@ -29,6 +29,11 @@ function App() {
     }
   }, [modal]);
 
+  const resetState = () => {
+    setQuery("");
+    setPage(1);
+  };
+
   const handleSetQuery = (e) => {
     setQuery(e.target.value);
   };
@@ -37,11 +42,14 @@ function App() {
     e.preventDefault();
     setPage(1);
     setLoader(true);
+
     const {
       data: { hits },
     } = await getPictures(query, 1);
     setLoader(false);
     setImages(hits);
+    resetState();
+
     setPage((prev) => prev + 1);
   };
 
@@ -66,7 +74,7 @@ function App() {
   };
 
   const hendleCloseModal = (e) => {
-    if (e.target.nodeName !== "IMG") {
+    if (e.target.nodeName === "IMG") {
       return;
     }
     setModal("");
