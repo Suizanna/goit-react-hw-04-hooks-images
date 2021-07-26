@@ -29,11 +29,12 @@ function App() {
     }
   }, [modal]);
 
-  const resetState = () => {
-    setQuery("");
-    setPage(1);
-  };
+  // const resetState = () => {
+  //   setQuery("");
+  //   setPage(1);
+  // };
 
+  //изменения в инпуте
   const handleSetQuery = (e) => {
     setQuery(e.target.value);
   };
@@ -48,19 +49,18 @@ function App() {
     } = await getPictures(query, 1);
     setLoader(false);
     setImages(hits);
-    resetState();
 
     setPage((prev) => prev + 1);
   };
 
   const hendleLoadMore = async () => {
-    // setLoader(true);
+    setLoader(true);
     const {
       data: { hits },
     } = await getPictures(query, page);
     setImages((prev) => [...prev, ...hits]);
     setPage((prev) => prev + 1);
-    // setLoader(false);
+    setLoader(false);
 
     window.scrollTo({
       top: document.documentElement.scrollHeight,
