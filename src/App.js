@@ -5,6 +5,9 @@ import ImageGallery from "./Components/ImageGallery/ImageGallery";
 import Button from "./Components/Button/Button";
 import Modal from "./Components/Modal/Modal";
 import Loader from "./Components/Loader/Loader";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import getPictures from "./services/fetch";
 
@@ -29,44 +32,76 @@ function App() {
     }
   }, [modal]);
 
-  // const resetState = () => {
-  //   setQuery("");
-  //   setPage(1);
-  // };
-
   //изменения в инпуте
   const handleSetQuery = (e) => {
     setQuery(e.target.value);
   };
 
+  //   try catch
+  // const hendleGetImages = async (e) => {
+  //   e.preventDefault();
+  //   setPage(1);
+  //   setLoader(true);
+  //   try {
+  //     const {
+  //       data: { hits },
+  //     } = await getPictures(query, 1);
+  //     setLoader(false);
+  //     setImages(hits);
+  //     setPage((prev) => prev + 1);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
   const hendleGetImages = async (e) => {
     e.preventDefault();
-    setPage(1);
     setLoader(true);
+    setPage(1);
 
-    const {
-      data: { hits },
-    } = await getPictures(query, 1);
-    setLoader(false);
-    setImages(hits);
+    if (query.trim() === "") {
+      setLoader(false);
+      return toast.error("Please enter something!");
+    } else {
+      setQuery(""); //очиста формы сразу после Submit
+      setLoader(false);
+      try {
+        const {
+          data: { hits },
+        } = await getPictures(query, 1);
+        setImages(hits);
+        setPage((prev) => prev + 1);
 
-    setPage((prev) => prev + 1);
+        if (hits.length < 1) {
+          setQuery("");
+          return toast.warning(
+            `Your search - ${query} - did not match any images`
+          );
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
   };
 
   const hendleLoadMore = async () => {
     setLoader(true);
-    const {
-      data: { hits },
-    } = await getPictures(query, page);
-    setImages((prev) => [...prev, ...hits]);
-    setPage((prev) => prev + 1);
-    setLoader(false);
-
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      left: 0,
-      behavior: "smooth",
-    });
+    try {
+      const {
+        data: { hits },
+      } = await getPictures(query, page);
+      setImages((prev) => [...prev, ...hits]);
+      setPage((prev) => prev + 1);
+      setLoader(false);
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    } catch (error) {
+      console.log(error.message);
+      toast.error("Enter a valid search query");
+    }
   };
 
   const hendleShowModal = (url) => {
@@ -93,6 +128,7 @@ function App() {
       {images.length >= 12 && <Button onLoadMore={hendleLoadMore} />}
       {modal && <Modal closeModal={hendleCloseModal} modalImg={modal} />}
       {loader && <Loader />}
+      <ToastContainer autoClose={3000} />
     </div>
   );
 }
