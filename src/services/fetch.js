@@ -22,14 +22,23 @@ function getPictures(query, page) {
 //   );
 // }
 
-// // не работает
+//3
+// async function getPictures(query, page)  {
+//   const response = await fetch(
+//     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`
+//   )
+//   const data = await response.json();
+//   return data;
+// };
+
+// //и
 // const getPictures = (query, page) => {
 //   return fetch(
 //     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`
 //   )
-//     .then((response) => {
-//       return response.json();
-//     })
+//     // .then((response) => {
+//     //   return response.json();
+//     // })
 //     .then((images) => console.log(images))
 //     .catch((error) => console.log(error.message));
 // };
