@@ -6,9 +6,9 @@ import Button from "./Components/Button/Button";
 import Modal from "./Components/Modal/Modal";
 import Loader from "./Components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+// import { Api } from "./services/fetch";
 import getPictures from "./services/fetch";
 
 function App() {
@@ -37,114 +37,66 @@ function App() {
     setQuery(e.target.value);
   };
 
-  //   try catch
-  // const hendleGetImages = async (e) => {
-  //   e.preventDefault();
-  //   setPage(1);
-  //   setLoader(true);
-  //   try {
-  //     const {
-  //       data: { hits },
-  //     } = await getPictures(query, 1);
-  //     setLoader(false);
-  //     setImages(hits);
-  //     setPage((prev) => prev + 1);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
-
-  const hendleGetImages = (e) => {
+  const handleGetImages = async (e) => {
     e.preventDefault();
     setPage(1);
-
-    getPictures(query, 1)
-      .then((images) => {
-        console.log(images);
-        setImages(images.data.hits);
-        // setPage((prev) => prev + 1);
-        return images;
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-  const hendleLoadMore = () => {
     setLoader(true);
-    getPictures(query, page)
-      .then((images) => {
-        console.log(images);
-        setImages((prev) => [...prev, ...images.data.hits]);
-        setPage((prev) => prev + 1);
-        return images;
 
-        // window.scrollTo({
-        //   top: document.documentElement.scrollHeight,
-        //   left: 0,
-        //   behavior: "smooth",
-        // });
-      })
-      .catch((error) => {
+    if (query.trim() === "") {
+      setLoader(false);
+      setQuery("");
+      return toast.error("Please enter something!");
+    } else {
+      setLoader(false);
+
+      try {
+        const {
+          data: { hits },
+        } = await getPictures(query, 1);
+
+        setLoader(false);
+        setImages(hits);
+
+        if (hits.length < 1) {
+          setQuery("");
+          return toast.warning(
+            `Your search - ${query} - did not match any images`
+          );
+        }
+
+        setPage((prev) => prev + 1);
+      } catch (error) {
         console.log(error.message);
-      });
+      }
+    }
   };
 
-  //работает try catch
-  // const hendleGetImages = async (e) => {
-  //   e.preventDefault();
-  //   setLoader(true);
-  //   setPage(1);
+  //Button
+  const handleLoadMore = async () => {
+    try {
+      const {
+        data: { hits },
+      } = await getPictures(query, page);
+      setImages((prev) => [...prev, ...hits]);
+      setPage((prev) => prev + 1);
 
-  //   if (query.trim() === "") {
-  //     setLoader(false);
-  //     return toast.error("Please enter something!");
-  //   } else {
-  //     setQuery(""); //очиста формы сразу после Submit
-  //     setLoader(false);
-  //     try {
-  //       const {
-  //         data: { hits },
-  //       } = await getPictures(query, 1);
-  //       setImages(hits);
-  //       setPage((prev) => prev + 1);
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    } catch (error) {
+      console.log(error.message);
+      toast.error("Enter a valid search query");
+    }
+  };
 
-  //       if (hits.length < 1) {
-  //         setQuery("");
-  //         return toast.warning(
-  //           `Your search - ${query} - did not match any images`
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   }
-  // };
-  ////работает
-  // const hendleLoadMore = async () => {
-  //   setLoader(true);
-  //   try {
-  //     const {
-  //       data: { hits },
-  //     } = await getPictures(query, page);
-  //     setImages((prev) => [...prev, ...hits]);
-  //     setPage((prev) => prev + 1);
-  //     setLoader(false);
-  //     window.scrollTo({
-  //       top: document.documentElement.scrollHeight,
-  //       left: 0,
-  //       behavior: "smooth",
-  //     });
-  //   } catch (error) {
-  //     console.log(error.message);
-  //     // toast.error("Enter a valid search query");
-  //   }
-  // };
-
-  const hendleShowModal = (url) => {
+  // Modal
+  const handleShowModal = (url) => {
     setModal(url);
   };
 
-  const hendleCloseModal = (e) => {
+  const handleCloseModal = (e) => {
     if (e.target.nodeName === "IMG") {
       return;
     }
@@ -156,13 +108,13 @@ function App() {
       <Searchbar
         query={query}
         onSetQuery={handleSetQuery}
-        onSubmit={hendleGetImages}
+        onSubmit={handleGetImages}
       />
 
-      <ImageGallery showModal={hendleShowModal} images={images} />
+      <ImageGallery showModal={handleShowModal} images={images} />
 
-      {images.length >= 12 && <Button onLoadMore={hendleLoadMore} />}
-      {modal && <Modal closeModal={hendleCloseModal} modalImg={modal} />}
+      {images.length >= 12 && <Button onLoadMore={handleLoadMore} />}
+      {modal && <Modal closeModal={handleCloseModal} modalImg={modal} />}
       {loader && <Loader />}
       <ToastContainer autoClose={3000} />
     </div>
@@ -170,3 +122,39 @@ function App() {
 }
 
 export default App;
+
+// then catch
+// const handleGetImages = (e) => {
+//   e.preventDefault();
+//   setPage(1);
+
+//    Api.getPictures(query, 1)
+//     .then((images) => {
+//       console.log(images);
+//       setImages(images);
+//       setPage((prev) => prev + 1);
+//       return images;
+//     })
+//     .catch((error) => {
+//       console.log(error.message);
+//     });
+// };
+// const handleLoadMore = () => {
+//   setLoader(true);
+//   Api.getPictures(query, page)
+//     .then((images) => {
+//       console.log(images);
+//       setImages((prev) => [...prev, ...images]);
+//       setPage((prev) => prev + 1);
+//       setLoader(false);
+//       // return images;
+//       window.scrollTo({
+//         top: document.documentElement.scrollHeight,
+//         left: 0,
+//         behavior: "smooth",
+//       });
+//     })
+//     .catch((error) => {
+//       console.log(error.message);
+//     });
+// };

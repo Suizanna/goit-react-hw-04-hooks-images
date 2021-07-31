@@ -1,14 +1,15 @@
 import s from "./ImageGalleryItem.module.css";
 
-function ImageGalleryItem({ url, alt, modalUrl, showModal }) {
+function ImageGalleryItem({ alt, url, modalUrl, showModal }) {
+
   return (
-    <li  className={s.ImageGalleryItem}
+    <li  className={s.ImageGalleryItem} 
     >
-      <img
-        onClick={() => showModal(modalUrl)}
+      <img className={s.ImageGalleryItem_image}
+      onClick={() => showModal(modalUrl)}
+        // src={src}
         src={url}
-        alt={alt}
-        className={s.ImageGalleryItem_image}
+        alt={alt}   
       />  
     </li>
   );

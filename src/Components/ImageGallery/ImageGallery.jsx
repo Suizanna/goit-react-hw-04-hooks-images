@@ -5,13 +5,14 @@ const ImageGallery = ({ images, showModal }) => {
   console.log(images);
   return (
     <ul  className={s.ImageGallery}>
-      {images.data.hits.map(({ id, webformatURL, largeImageURL, tags }) => (
+      {images.map(({ id, webformatURL, largeImageURL, tags }) => (
         <ImageGalleryItem
           key={id}      
           modalUrl={largeImageURL} 
+          // src={webformatURL}
           url={webformatURL}
-          showModal={showModal}
           alt={tags}
+          showModal={showModal}
         />
       ))}
     </ul>

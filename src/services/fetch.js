@@ -1,5 +1,5 @@
 import axios from "axios";
-
+// дублирует катинки id
 function getPictures(query, page) {
   return axios({
     method: "GET",
@@ -7,40 +7,33 @@ function getPictures(query, page) {
   });
 }
 
+// 2вариант
 // const BASE_URL = "https://pixabay.com/api/";
 // const API_KEY = "21764210-8d882ab68fe5176a0369b7247";
-
-// async function fetchWithErrorHandling(url = "", config = {}) {
+// //обертка вместо axios,что ошибку 404 обрабатывала
+// // работает без .data в App.js => как setImages(images.hits);
+// async function fetchWithErrorHandling(url = '', config = {}) {
 //   const response = await fetch(url, config);
 //   return response.ok
 //     ? await response.json()
-//     : Promise.reject(new Error("Not nd"));
+//     : Promise.reject(new Error('Not found'));
 // }
 // export function getPictures(query, page) {
 //   return fetchWithErrorHandling(
-//     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`
+//     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`,
 //   );
 // }
-
-//3
-// async function getPictures(query, page)  {
-//   const response = await fetch(
-//     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`
-//   )
-//   const data = await response.json();
-//   return data;
-// };
-
-// //и
-// const getPictures = (query, page) => {
-//   return fetch(
-//     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`
-//   )
-//     // .then((response) => {
-//     //   return response.json();
-//     // })
-//     .then((images) => console.log(images))
-//     .catch((error) => console.log(error.message));
-// };
-
 export default getPictures;
+
+// //работает без.data.hits в App
+// axios.defaults.baseURL = BASE_URL;
+
+// export class Api {
+//   static async getPictures(searchQuery, page) {
+//     const params = `?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12
+//         `;
+//     const { data } = await axios.get(params);
+
+//     return data.hits;
+//   }
+// }
