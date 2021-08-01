@@ -44,7 +44,7 @@ function App() {
 
     if (query.trim() === "") {
       setLoader(false);
-      setQuery("");
+      setQuery(""); // очистка инпута после сабмита не работает
       return toast.error("Please enter something!");
     } else {
       setLoader(false);

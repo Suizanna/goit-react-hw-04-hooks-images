@@ -6,7 +6,7 @@ function getPictures(query, page) {
     url: `https://pixabay.com/api/?key=&key=15900106-2c235e732bb321ca7ec900d93&q=${query}&page=${page}&per_page=12`,
   });
 }
-
+export default getPictures;
 // 2вариант
 // const BASE_URL = "https://pixabay.com/api/";
 // const API_KEY = "21764210-8d882ab68fe5176a0369b7247";
@@ -23,9 +23,8 @@ function getPictures(query, page) {
 //     `${BASE_URL}?image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=12&key=${API_KEY}`,
 //   );
 // }
-export default getPictures;
 
-// //работает без.data.hits в App
+//работает без.data.hits в App
 // axios.defaults.baseURL = BASE_URL;
 
 // export class Api {
