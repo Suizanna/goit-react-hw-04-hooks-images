@@ -44,7 +44,6 @@ function App() {
 
     if (query.trim() === "") {
       setLoader(false);
-      setQuery(""); // очистка инпута после сабмита не работает
       return toast.error("Please enter something!");
     } else {
       setLoader(false);
@@ -53,7 +52,7 @@ function App() {
         const {
           data: { hits },
         } = await getPictures(query, 1);
-
+        setQuery("");
         setLoader(false);
         setImages(hits);
 
